@@ -1,6 +1,6 @@
  /*********
-  Rui Santos
-  Complete project details at https://randomnerdtutorials.com  
+ Kris Blouch
+ Code for running an oled, 2 buttons, and tilt switch to generate dice rolls
 *********/
 //libraries
 #include <Wire.h>
