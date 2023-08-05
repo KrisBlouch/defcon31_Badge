@@ -1,0 +1,380 @@
+ /*********
+ Kris Blouch
+ -Code for running an oled, 6 buttons, and tilt switch to generate dice rolls
+ -v2 now supports the correct button placement and dice types: 20, 12, 10, 10/100, 8, 6, 4
+*********/
+//libraries
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+//buttons
+
+//Tilt Switch
+#define TILT_INPUT_PIN 10
+
+//Right Buttons
+#define BUTTON_A_INPUT 8
+#define BUTTON_B_INPUT 9
+//D-Pad
+#define BUTTON_UP_INPUT 1
+#define BUTTON_DOWN_INPUT 3
+#define BUTTON_LEFT_INPUT 0
+#define BUTTON_RIGHT_INPUT 2
+//var
+int DICE_COUNT = 0;
+int myPins[] = {4,6,8,20};
+int PRESS_LEN_MILLI = 0;
+
+
+//screen stuff
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+
+// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+//variables
+int dice20 = 0;
+int dice4 = 0;
+int dice6 = 0;
+int dice8 = 0;
+int dice10 = 0;
+int dice12 = 0;
+int funct1 = 0;
+
+
+//string diceSpace = "  ";
+
+//functions
+
+void D20();
+
+void setup() {
+//  pinMode(LED_PIN, OUTPUT);
+  pinMode(TILT_INPUT_PIN, INPUT);
+ // pinMode(TILT_HOT, OUTPUT);
+  pinMode(BUTTON_A_INPUT, INPUT);
+  pinMode(BUTTON_B_INPUT, INPUT);
+ // digitalWrite(TILT_HOT, HIGH);
+  Serial.begin(9600);
+  //Serial.begin(115200);
+
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;);
+  }
+  //delay(2000);
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
+  // Display static text
+  //dice20 = random(1,20);
+  display.println(" Webflow! ");
+  display.setTextSize(3);
+  display.println("PUSH    BUTTON");
+  display.display();
+  delay(3000);
+
+}
+
+void loop() {
+  
+  while(true) {
+    if(digitalRead(BUTTON_A_INPUT) == HIGH) {
+      break;
+    }
+  }
+  
+  
+  while(digitalRead(BUTTON_A_INPUT) == HIGH) {
+    delay(100);
+    PRESS_LEN_MILLI = PRESS_LEN_MILLI + 100;
+  }
+
+  if(PRESS_LEN_MILLI > 100); {
+    DICE_COUNT = DICE_COUNT + 1;
+    pickD20();
+  }
+  while(true) {
+    if(digitalRead(TILT_INPUT_PIN) == 0) {
+      rollD20();
+    }
+    if(digitalRead(BUTTON_A_INPUT) == HIGH) {
+      break;
+    }
+
+  }  
+while(digitalRead(BUTTON_A_INPUT) == HIGH) {
+    delay(100);
+    PRESS_LEN_MILLI = PRESS_LEN_MILLI + 100;
+  }
+
+  if(PRESS_LEN_MILLI > 100); {
+    DICE_COUNT = DICE_COUNT + 1;
+    pickD4();
+  }
+  while(true) {
+    if(digitalRead(TILT_INPUT_PIN) == 0) {
+      rollD4();
+    }
+    if(digitalRead(BUTTON_A_INPUT) == HIGH) {
+      break;
+    }
+
+  }    
+while(digitalRead(BUTTON_A_INPUT) == HIGH) {
+    delay(100);
+    PRESS_LEN_MILLI = PRESS_LEN_MILLI + 100;
+  }
+
+  if(PRESS_LEN_MILLI > 100); {
+    DICE_COUNT = DICE_COUNT + 1;
+    pickD6();
+  }
+  while(true) {
+    if(digitalRead(TILT_INPUT_PIN) == 0) {
+      rollD6();
+    }
+    if(digitalRead(BUTTON_A_INPUT) == HIGH) {
+      break;
+    }
+
+  }  
+while(digitalRead(BUTTON_A_INPUT) == HIGH) {
+    delay(100);
+    PRESS_LEN_MILLI = PRESS_LEN_MILLI + 100;
+  }
+
+  if(PRESS_LEN_MILLI > 100); {
+    DICE_COUNT = DICE_COUNT + 1;
+    pickD8();
+  }
+  while(true) {
+    if(digitalRead(TILT_INPUT_PIN) == 0) {
+      rollD8();
+    }
+    if(digitalRead(BUTTON_A_INPUT) == HIGH) {
+      break;
+    }
+
+  }  
+
+ 
+  while(digitalRead(BUTTON_A_INPUT) == HIGH) {
+    delay(100);
+    PRESS_LEN_MILLI = PRESS_LEN_MILLI + 100;
+  }
+
+  if(PRESS_LEN_MILLI > 100); {
+    DICE_COUNT = DICE_COUNT + 1;
+    pickD10();
+  }
+  while(true) {
+    if(digitalRead(TILT_INPUT_PIN) == 0) {
+      rollD10();
+    }
+    if(digitalRead(BUTTON_A_INPUT) == HIGH) {
+      break;
+    }
+ 
+  while(digitalRead(BUTTON_A_INPUT) == HIGH) {
+    delay(100);
+    PRESS_LEN_MILLI = PRESS_LEN_MILLI + 100;
+  }
+
+  if(PRESS_LEN_MILLI > 100); {
+    DICE_COUNT = DICE_COUNT + 1;
+    pickD12();
+  }
+  while(true) {
+    if(digitalRead(TILT_INPUT_PIN) == 0) {
+      rollD12();
+    }
+    if(digitalRead(BUTTON_A_INPUT) == HIGH) {
+      break;
+    }
+  }
+
+  }
+}
+
+  
+
+  //if(digitalRead(BUTTON_PIN) == HIGH && digitalRead(BUTTON2_PIN) == HIGH)
+    //break;
+      //pickD4();
+  
+      
+
+//functions:
+  void rollD20(){
+    dice20 = random(1,20);
+    display.clearDisplay();
+    display.setTextSize(6);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 16);
+  // Display static text
+    dice20 = random(1,20);
+    //diceSpace = "  ";
+    display.print(" ");
+    display.println(dice20);
+    display.display(); 
+    Serial.println(dice20);
+    delay(3000);
+  }
+
+    void rollD4(){
+    dice4 = random(1,4);
+    display.clearDisplay();
+    display.setTextSize(6);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 16);
+  // Display static text
+    //diceSpace = "  ";
+    display.print(" ");
+    display.println(dice4);
+    display.display(); 
+    Serial.println(dice4);
+    delay(3000);
+  }
+
+    void rollD6(){
+    dice6 = random(1,6);
+    display.clearDisplay();
+    display.setTextSize(6);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 16);
+  // Display static text
+    //diceSpace = "  ";
+    display.print(" ");
+    display.println(dice6);
+    display.display(); 
+    Serial.println(dice6);
+    delay(3000);
+  }
+
+    void rollD8(){
+    dice8 = random(1,8);
+    display.clearDisplay();
+    display.setTextSize(6);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 16);
+  // Display static text
+    //diceSpace = "  ";
+    display.print(" ");
+    display.println(dice8);
+    display.display(); 
+    Serial.println(dice8);
+    delay(3000);
+  }
+
+     void rollD10(){
+    dice10 = random(1,10);
+    display.clearDisplay();
+    display.setTextSize(6);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 16);
+  // Display static text
+    //diceSpace = "  ";
+    display.print(" ");
+    display.println(dice10);
+    display.display(); 
+    Serial.println(dice10);
+    delay(3000);
+  }
+
+     void rollD12(){
+    dice12 = random(1,12);
+    display.clearDisplay();
+    display.setTextSize(6);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 16);
+  // Display static text
+    //diceSpace = "  ";
+    display.print(" ");
+    display.println(dice12);
+    display.display(); 
+    Serial.println(dice12);
+    delay(3000);
+  }
+
+  //selectDiceFunctions
+
+  void pickD20(){
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(" Pick Die");
+    display.setCursor(0, 16);
+  // Display next Line
+    display.setTextSize(5);
+    display.println("D20");
+    display.display(); 
+  }
+
+    void pickD4(){
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(" Pick Die");
+    display.setCursor(0, 16);
+  // Display next Line
+    display.setTextSize(5);
+    display.println("D4");
+    display.display(); 
+  }
+
+    void pickD6(){
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(" Pick Die");
+    display.setCursor(0, 16);
+  // Display next Line
+    display.setTextSize(5);
+    display.println("D6");
+    display.display(); 
+  }
+
+    void pickD8(){
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(" Pick Die");
+    display.setCursor(0, 16);
+  // Display next Line
+    display.setTextSize(5);
+    display.println("D8");
+    display.display(); 
+  }
+
+   void pickD10(){
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(" Pick Die");
+    display.setCursor(0, 16);
+  // Display next Line
+    display.setTextSize(5);
+    display.println("D10");
+    display.display(); 
+  }
+
+ void pickD12(){
+    display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0,0);
+    display.println(" Pick Die");
+    display.setCursor(0, 16);
+  // Display next Line
+    display.setTextSize(5);
+    display.println("D12");
+    display.display(); 
+  }
