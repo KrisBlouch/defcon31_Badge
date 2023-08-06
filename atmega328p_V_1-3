@@ -281,7 +281,7 @@ void setup() {
   display.setCursor(0, 0);
   // Display static text
   //dice20 = random(1,20);
-  display.println("  Webflow!");
+  display.println("  DEFCON31");
   display.setTextSize(3);
   display.println("PUSH    BUTTON");
   display.display();
